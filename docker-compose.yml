@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   whisper:
@@ -12,6 +12,14 @@ services:
     #   - mongo-server
     volumes:
       - ./whisper:/python-docker
+  api:
+    build: ./src
+    command: uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    volumes:
+      - ./src/app:/usr/src/app/
+    ports:
+      - 8002:8000
+    # restart: "no"
   # mongo-server:
   #   image: mongo:latest
   #   ports:
