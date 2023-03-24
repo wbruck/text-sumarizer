@@ -18,6 +18,7 @@ docker run -p 5000:5000 whisper-api
 
 ```bash
 curl -F "file=@/path/to/file" http://localhost:5000/whisper
+ time curl -F "file=@./RPP_E145_03_Cx2.abc600d33769.mp3" http://localhost:5000/whisper
 ```
 3. In result you should get a JSON object with the transcript in it.
 

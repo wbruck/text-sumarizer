@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>File Upload Example</title>
+    <link rel="stylesheet" href="static/upload.css">
+  </head>
+  <body>
+    <form>
+      <input type="file" id="file-input">
+      <button type="submit" id="submit-button">Submit</button>
+    </form>
+
+    <div id="file-display"></div>
+
+    <div id="spinner" style="display: none;">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <script>
+      const form = document.querySelector('form');
+      const fileInput = document.querySelector('#file-input');
+      const fileDisplay = document.querySelector('#file-display');
+      const spinner = document.querySelector('#spinner');
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        // Show spinner while waiting for response
+        spinner.style.display = 'block';
+
+        fetch('/whisper', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          const message = `Filename: ${data.filename}<br>FileContents: ${data.transcript}`;
+          fileDisplay.innerHTML = message;
+
+          // Hide spinner after response is received
+          spinner.style.display = 'none';
+        })
+        .catch(error => console.error(error));
+      });
+    </script>
+
+    <style>
+      .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+
+      .spinner {
+        border: 8px solid rgba(0, 0, 0, 0.1);
+        border-top-color: #007bff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </body>
+</html>
